@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.npm
+
+# Environment
+.env*
+!.env.example
+
+# Build outputs
+dist/
+build/
+*.tgz
+
+# Database
+*.sqlite
+*.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# React Native
+android/
+ios/
+.expo/
+
+# Temp
+tmp/
+temp/
+
+# Coverage
+coverage/
