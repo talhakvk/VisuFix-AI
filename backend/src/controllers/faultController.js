@@ -1,15 +1,30 @@
 const path = require('path');
 const fs = require('fs');
 const faultModel = require('../models/faultModel');
+const stepModel = require('../models/stepModel');
+const { analyzeImage } = require('../services/geminiService');
 
-function createFault(req, res, next) {
+async function createFault(req, res, next) {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'Photo file is required.' });
     }
     const photoUrl = 'uploads/' + req.file.filename;
     const fault = faultModel.createFault(photoUrl);
-    return res.status(201).json(fault);
+
+    try {
+      const fullPath = path.join(process.cwd(), fault.photo_url);
+      const steps = await analyzeImage(fullPath);
+      stepModel.createSteps(fault.id, steps);
+      faultModel.updateFaultStatus(fault.id, 'analyzed');
+
+      const updatedFault = faultModel.getFaultById(fault.id);
+      const savedSteps = stepModel.getStepsByFaultId(fault.id);
+      return res.status(201).json({ fault: updatedFault, steps: savedSteps });
+    } catch (aiError) {
+      faultModel.updateFaultStatus(fault.id, 'error');
+      return next(aiError);
+    }
   } catch (error) {
     next(error);
   }

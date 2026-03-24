@@ -6,4 +6,19 @@ function getStepsByFaultId(faultId) {
   ).all(faultId);
 }
 
-module.exports = { getStepsByFaultId };
+function createSteps(faultId, steps) {
+  const insert = db.prepare(`
+    INSERT INTO steps (fault_id, step_order, coord_x, coord_y, description)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+
+  const insertMany = db.transaction((stepsToInsert) => {
+    for (const step of stepsToInsert) {
+      insert.run(faultId, step.step_order, step.coord_x, step.coord_y, step.description);
+    }
+  });
+
+  insertMany(steps);
+}
+
+module.exports = { getStepsByFaultId, createSteps };

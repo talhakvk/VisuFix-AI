@@ -21,4 +21,9 @@ function deleteFault(id) {
   return result.changes;
 }
 
-module.exports = { createFault, getAllFaults, getFaultById, deleteFault };
+function updateFaultStatus(id, status) {
+  const stmt = db.prepare('UPDATE faults SET status = ? WHERE id = ?');
+  return stmt.run(status, id);
+}
+
+module.exports = { createFault, getAllFaults, getFaultById, deleteFault, updateFaultStatus };
