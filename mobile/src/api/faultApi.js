@@ -41,3 +41,31 @@ export async function uploadFault(imageUri) {
     }
   }
 }
+
+/**
+ * Belirli bir arızaya ait onarım adımlarını backend'den çeker.
+ * @param {number} faultId - Arıza kaydının ID'si
+ * @returns {Promise<Array>} - Adımlar dizisi [{ id, fault_id, step_order, coord_x, coord_y, description }]
+ */
+export async function getSteps(faultId) {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/faults/${faultId}/steps`,
+      { timeout: 15000 }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data?.error || 'Adımlar alınırken sunucu hatası oluştu.'
+      );
+    } else if (error.request) {
+      throw new Error(
+        'Sunucuya bağlanılamadı. Lütfen backend sunucusunun çalıştığını kontrol edin.'
+      );
+    } else {
+      throw new Error(error.message || 'Adımlar alınırken beklenmeyen bir hata oluştu.');
+    }
+  }
+}
