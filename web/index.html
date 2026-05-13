@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VisuFix AI Admin Panel — Arıza kayıtlarını yönetin, yapay zeka destekli tamir rehberlerini görüntüleyin." />
+  <title>VisuFix AI — Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {} }
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="dark">
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR OVERLAY (mobile)
+══════════════════════════════════════════════ -->
+<div class="sidebar-overlay hidden" id="sidebarOverlay" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════════════
+     APP LAYOUT
+══════════════════════════════════════════════ -->
+<div class="app-layout">
+
+  <!-- ── Sidebar ──────────────────────────────── -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Ana navigasyon">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-dot" aria-hidden="true"></div>
+      <span class="logo-text">VisuFix AI</span>
+    </div>
+    <div class="logo-subtitle">Admin Panel</div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menü</div>
+
+      <a href="index.html" class="nav-link active" aria-current="page" id="nav-dashboard">
+        <span class="nav-icon" aria-hidden="true">⬡</span>
+        Dashboard
+      </a>
+
+      <a href="index.html" class="nav-link" id="nav-faults">
+        <span class="nav-icon" aria-hidden="true">📋</span>
+        Arızalar
+      </a>
+
+      <button class="nav-link" id="nav-settings" onclick="showSettingsToast()">
+        <span class="nav-icon" aria-hidden="true">⚙️</span>
+        Ayarlar
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <div class="text-xs" style="color:var(--text-secondary)">v1.0.0</div>
+      <div class="text-xs mt-1" style="color:var(--border)">© 2026 VisuFix AI</div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ──────────────────────────── -->
+  <div class="main-content">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="flex items-center gap-3">
+        <!-- Hamburger -->
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6"  x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="header-title">Arıza Kayıtları</h1>
+      </div>
+
+      <div class="header-meta">
+        <span class="count-badge" id="headerCount">— kayıt</span>
+        <span class="header-time" id="headerTime" aria-live="polite"></span>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="page-body" id="main">
+
+      <!-- ── Stat Cards ── -->
+      <section class="stats-grid" aria-label="Özet istatistikler">
+
+        <div class="stat-card">
+          <div class="stat-icon total" aria-hidden="true">📂</div>
+          <div class="stat-info">
+            <div class="stat-value total" id="statTotal">—</div>
+            <div class="stat-label">Toplam Arıza</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon success" aria-hidden="true">✅</div>
+          <div class="stat-info">
+            <div class="stat-value success" id="statAnalyzed">—</div>
+            <div class="stat-label">Analiz Edildi</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon warning" aria-hidden="true">⏳</div>
+          <div class="stat-info">
+            <div class="stat-value warning" id="statPending">—</div>
+            <div class="stat-label">Beklemede</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── Filter Row ── -->
+      <div class="filter-row" role="search" aria-label="Filtre ve arama">
+
+        <label for="statusFilter" class="sr-only">Durum filtrele</label>
+        <select class="filter-select" id="statusFilter" aria-label="Duruma göre filtrele">
+          <option value="all">Tüm Durumlar</option>
+          <option value="analyzed">Analiz Edildi</option>
+          <option value="pending">Beklemede</option>
+          <option value="error">Hata</option>
+        </select>
+
+        <label for="searchInput" class="sr-only">ID ile ara</label>
+        <input
+          type="search"
+          class="search-input"
+          id="searchInput"
+          placeholder="🔍  ID ile ara…"
+          aria-label="Arıza ID'si ile ara"
+          inputmode="numeric"
+        />
+
+      </div>
+
+      <!-- ── Table ── -->
+      <div class="table-wrapper" role="region" aria-label="Arıza kayıtları tablosu">
+        <div class="table-scroll">
+          <table id="faultTable" aria-describedby="tableCaption">
+            <caption id="tableCaption" class="sr-only">Arıza kayıtları listesi</caption>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fotoğraf</th>
+                <th scope="col">Durum</th>
+                <th scope="col">Adım Sayısı</th>
+                <th scope="col">Tarih</th>
+                <th scope="col">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- JS tarafından doldurulur -->
+            </tbody>
+          </table>
+
+          <!-- Empty State -->
+          <div class="empty-state hidden" id="emptyState" role="status">
+            <div class="empty-state-icon" aria-hidden="true">🔍</div>
+            <div class="empty-state-text">Sonuç bulunamadı</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- ══════════════════════════════════════════════
+     TOAST CONTAINER
+══════════════════════════════════════════════ -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ══════════════════════════════════════════════
+     JS
+══════════════════════════════════════════════ -->
+<script src="js/dashboard.js"></script>
+</body>
+</html>
