@@ -39,6 +39,7 @@ async function loadFaults() {
     allFaults = await window.VisuFixAPI.fetchFaults();
     renderStats();
     renderTable();
+    renderSidebarFaults(allFaults);
   } catch (err) {
     setTableState('error', err.message);
     showToast(err.message, 'error');
@@ -181,10 +182,14 @@ function confirmDelete(faultId) {
 /* ── Helpers ────────────────────────────────────────────────── */
 function formatDate(isoString) {
   if (!isoString) return '—';
+  // SQLite CURRENT_TIMESTAMP UTC kaydeder ama 'Z' eklemiyor.
+  // '+00:00' ekleyerek UTC olduğunu browser'a açıkça bildiriyoruz.
+  const normalized = isoString.includes('Z') || isoString.includes('+') ? isoString : isoString + '+00:00';
   return new Intl.DateTimeFormat('tr-TR', {
     day: '2-digit', month: 'short', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
-  }).format(new Date(isoString));
+    timeZone: 'Europe/Istanbul',
+  }).format(new Date(normalized));
 }
 
 function renderBadge(status) {
@@ -242,7 +247,56 @@ function showToast(message, type = 'info') {
   }, 3500);
 }
 
-window.showSettingsToast = () => showToast('Ayarlar sayfası yakında geliyor!', 'info');
+
+
+/* ── Sidebar Recent Faults ──────────────────────────────────── */
+function renderSidebarFaults(faults) {
+  const list = document.getElementById('sidebarRecentList');
+  if (!list) return;
+
+  const recent = [...faults]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 3);
+
+  if (recent.length === 0) {
+    list.innerHTML = `<li class="recent-fault-empty">Henüz kayıt yok.</li>`;
+    return;
+  }
+
+  list.innerHTML = recent.map(fault => {
+    const statusMap = {
+      analyzed: { cls: 'badge-analyzed', label: 'Analiz' },
+      pending:  { cls: 'badge-pending',  label: 'Bekliyor' },
+      error:    { cls: 'badge-error',    label: 'Hata' },
+    };
+    const { cls, label } = statusMap[fault.status] ?? { cls: 'badge-pending', label: fault.status };
+    const dateStr = fault.created_at
+      ? new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Istanbul' })
+          .format(new Date(fault.created_at.includes('Z') || fault.created_at.includes('+') ? fault.created_at : fault.created_at + '+00:00'))
+      : '—';
+
+    return `
+      <li class="recent-fault-item" role="listitem">
+        <a href="detail.html?id=${fault.id}" class="recent-fault-link" aria-label="Arıza #${fault.id} detayı">
+          <div class="recent-fault-thumb">
+            <img
+              src="http://localhost:3000/${fault.photo_url}"
+              alt="Arıza #${fault.id}"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'thumb-placeholder-sm\' aria-hidden=\'true\'>📷</div>'"
+            />
+          </div>
+          <div class="recent-fault-info">
+            <div class="recent-fault-id">
+              <span>#${fault.id}</span>
+              <span class="badge ${cls} badge-sm">${label}</span>
+            </div>
+            <div class="recent-fault-date">${dateStr}</div>
+          </div>
+        </a>
+      </li>`;
+  }).join('');
+}
 
 /* ── Events ─────────────────────────────────────────────────── */
 function bindEvents() {

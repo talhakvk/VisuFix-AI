@@ -17,6 +17,7 @@ export default function SimulationScreen({ route }) {
   const [steps, setSteps] = useState([]);
   const [activeStepOrder, setActiveStepOrder] = useState(null);
   const [imageLayout, setImageLayout] = useState({ width: 0, height: 0 });
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
   /**
@@ -47,6 +48,15 @@ export default function SimulationScreen({ route }) {
   function handleImageLayout(event) {
     const { width, height } = event.nativeEvent.layout;
     setImageLayout(() => ({ width, height }));
+  }
+
+  /**
+   * Image yüklenince orijinal (natural) boyutları kaydeder.
+   * Bu, contain modundaki letterbox offset hesabı için gereklidir.
+   */
+  function handleImageLoad(event) {
+    const { width, height } = event.nativeEvent.source;
+    setImageSize(() => ({ width, height }));
   }
 
   /**
@@ -98,6 +108,7 @@ export default function SimulationScreen({ route }) {
           source={{ uri: photoUri }}
           style={styles.image}
           onLayout={handleImageLayout}
+          onLoad={handleImageLoad}
           resizeMode="contain"
         />
 
@@ -105,6 +116,7 @@ export default function SimulationScreen({ route }) {
           <MarkerOverlay
             steps={steps}
             imageLayout={imageLayout}
+            imageSize={imageSize}
             activeStep={activeStepOrder}
             onMarkerPress={handleMarkerPress}
           />

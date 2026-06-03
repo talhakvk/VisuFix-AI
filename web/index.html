@@ -55,17 +55,20 @@
         <span class="nav-icon" aria-hidden="true">⬡</span>
         Dashboard
       </a>
-
-      <a href="index.html" class="nav-link" id="nav-faults">
-        <span class="nav-icon" aria-hidden="true">📋</span>
-        Arızalar
-      </a>
-
-      <button class="nav-link" id="nav-settings" onclick="showSettingsToast()">
-        <span class="nav-icon" aria-hidden="true">⚙️</span>
-        Ayarlar
-      </button>
     </nav>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Son Arızalar -->
+    <div class="sidebar-recent" aria-label="Son arızalar">
+      <div class="nav-label">SON ARIZALAR</div>
+      <ul class="recent-fault-list" id="sidebarRecentList" role="list">
+        <!-- JS tarafından doldurulur -->
+        <li class="recent-fault-skeleton"></li>
+        <li class="recent-fault-skeleton"></li>
+        <li class="recent-fault-skeleton"></li>
+      </ul>
+    </div>
 
     <!-- Footer -->
     <div class="sidebar-footer">
