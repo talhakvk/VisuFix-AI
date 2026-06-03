@@ -55,7 +55,7 @@ export default function MarkerOverlay({ steps, imageLayout, imageSize, activeSte
 
   if (imageSize && imageSize.width > 0 && imageSize.height > 0) {
     const containerAspect = containerW / containerH;
-    const imageAspect     = imageSize.width / imageSize.height;
+    const imageAspect = imageSize.width / imageSize.height;
 
     if (imageAspect > containerAspect) {
       // Yatay fotoğraf: genişlik container kadar, yükseklik küçülür
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5, shadowRadius: 6,
   },
-  markerActive:     { backgroundColor: '#FF3B30' },
-  markerInactive:   { backgroundColor: 'rgba(255, 59, 48, 0.2)' },
-  markerText:       { fontSize: 11, fontWeight: 'bold', color: '#FF3B30' },
+  markerActive: { backgroundColor: '#FF3B30' },
+  markerInactive: { backgroundColor: 'rgba(255, 59, 48, 0.2)' },
+  markerText: { fontSize: 11, fontWeight: 'bold', color: '#FF3B30' },
   markerTextActive: { color: '#FFFFFF' },
 });
