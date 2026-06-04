@@ -313,55 +313,40 @@ function renderMarkers(fault, steps) {
   function drawMarkers() {
     container.querySelectorAll('.marker').forEach(m => m.remove());
 
-    // Fotoğrafın orijinal boyutları
-    const naturalWidth  = img.naturalWidth;
-    const naturalHeight = img.naturalHeight;
-    if (!naturalWidth || !naturalHeight) return;
+    if (!img.naturalWidth || !img.naturalHeight) return;
 
-    // Container'ın boyutu (marker'lar buraya position:absolute olarak ekleniyor)
-    const containerW = container.clientWidth;
-    const containerH = container.clientHeight;
+    // img elementinin container içindeki gerçek pozisyonu ve boyutu
+    const imgRect = img.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
 
-    // img elementi container içinde nerede başlıyor?
-    // (CSS'te img: width:100%; height:100%; object-fit:contain)
-    // object-fit:contain, img elementinin içinde fotoğrafı letterbox ile gösterir.
-    // img.offsetLeft/offsetTop → img'nin container'a göre sol-üst köşesi (genellikle 0,0)
-    // Gerçek render alanı ise img.clientWidth / clientHeight ile hesaplanır.
-    const imgOffsetX = img.offsetLeft;   // img elementinin container içi x konumu
-    const imgOffsetY = img.offsetTop;    // img elementinin container içi y konumu
-    const imgW = img.clientWidth;        // img elementinin CSS genişliği
-    const imgH = img.clientHeight;       // img elementinin CSS yüksekliği
-
-    // object-fit:contain içindeki letterbox offset
-    const imageAspect     = naturalWidth / naturalHeight;
-    const containerAspect = imgW / imgH;
+    // object-fit: contain letterbox hesabı
+    const imageAspect = img.naturalWidth / img.naturalHeight;
+    const imgElAspect = imgRect.width / imgRect.height;
 
     let renderWidth, renderHeight, letterboxX, letterboxY;
 
-    if (imageAspect > containerAspect) {
-      // Yatay fotoğraf: genişlik img kadar, yükseklik küçülür
-      renderWidth  = imgW;
-      renderHeight = imgW / imageAspect;
-      letterboxX   = 0;
-      letterboxY   = (imgH - renderHeight) / 2;
+    if (imageAspect > imgElAspect) {
+      renderWidth = imgRect.width;
+      renderHeight = imgRect.width / imageAspect;
+      letterboxX = 0;
+      letterboxY = (imgRect.height - renderHeight) / 2;
     } else {
-      // Dikey fotoğraf: yükseklik img kadar, genişlik küçülür
-      renderHeight = imgH;
-      renderWidth  = imgH * imageAspect;
-      letterboxX   = (imgW - renderWidth) / 2;
-      letterboxY   = 0;
+      renderHeight = imgRect.height;
+      renderWidth = imgRect.height * imageAspect;
+      letterboxX = (imgRect.width - renderWidth) / 2;
+      letterboxY = 0;
     }
 
-    // Toplam offset = img'nin container içi pozisyonu + letterbox
-    const totalOffsetX = imgOffsetX + letterboxX;
-    const totalOffsetY = imgOffsetY + letterboxY;
+    // container'a relative final koordinatlar
+    const baseX = (imgRect.left - containerRect.left) + letterboxX;
+    const baseY = (imgRect.top - containerRect.top) + letterboxY;
 
     steps.forEach(step => {
       const marker = document.createElement('div');
       marker.className = 'marker';
 
-      const x = totalOffsetX + (step.coord_x / 100) * renderWidth;
-      const y = totalOffsetY + (step.coord_y / 100) * renderHeight;
+      const x = baseX + (step.coord_x / 100) * renderWidth;
+      const y = baseY + (step.coord_y / 100) * renderHeight;
 
       marker.style.cssText = `
         position: absolute;

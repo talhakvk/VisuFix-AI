@@ -57,10 +57,10 @@ export default function SimulationScreen({ route }) {
   }, [fault.id]);
 
   /**
-   * Image bileşeninin onLayout event'inden fotoğrafın ekrandaki
+   * imageWrapper View'ının onLayout event'inden fotoğrafın ekrandaki
    * gerçek boyutlarını alır. MarkerOverlay buna göre konumlanır.
    */
-  function handleImageLayout(event) {
+  function handleWrapperLayout(event) {
     const { width, height } = event.nativeEvent.layout;
     setImageLayout(() => ({ width, height }));
   }
@@ -121,11 +121,10 @@ export default function SimulationScreen({ route }) {
   return (
     <View style={styles.container}>
       {/* Fotoğraf + AR İşaretleyici Katmanı */}
-      <View style={styles.imageWrapper}>
+      <View style={styles.imageWrapper} onLayout={handleWrapperLayout}>
         <Image
           source={{ uri: photoUri }}
           style={styles.image}
-          onLayout={handleImageLayout}
           onLoad={handleImageLoad}
           resizeMode="contain"
         />
@@ -177,8 +176,6 @@ const styles = StyleSheet.create({
   imageWrapper: {
     flex: 1,
     position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   image: {
     width: '100%',
