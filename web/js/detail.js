@@ -123,9 +123,20 @@ function buildDetailHTML(fault, steps) {
 function buildStepsHTML(steps) {
   if (steps.length === 0) {
     return `
-      <div class="no-steps" role="status">
-        <div class="no-steps-icon" aria-hidden="true">📭</div>
-        <div>Bu arıza için henüz adım oluşturulmamış.</div>
+      <div role="status" style="
+        background-color: #0d2e1a;
+        border: 1px solid #30D158;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      ">
+        <span aria-hidden="true" style="font-size:24px;color:#30D158;flex-shrink:0;">✓</span>
+        <div>
+          <div style="color:#30D158;font-weight:bold;margin-bottom:4px;">Arıza Tespit Edilmedi</div>
+          <div style="color:#a0a0a0;font-size:13px;">Bu cihazda görsel analiz sonucunda herhangi bir fiziksel arıza bulunamadı.</div>
+        </div>
       </div>`;
   }
   return [...steps]
@@ -302,42 +313,55 @@ function renderMarkers(fault, steps) {
   function drawMarkers() {
     container.querySelectorAll('.marker').forEach(m => m.remove());
 
-    // Fotoğrafın ekranda görünen boyutları
-    const displayWidth  = img.clientWidth;
-    const displayHeight = img.clientHeight;
-
     // Fotoğrafın orijinal boyutları
     const naturalWidth  = img.naturalWidth;
     const naturalHeight = img.naturalHeight;
-
     if (!naturalWidth || !naturalHeight) return;
 
-    // object-fit: contain mantığıyla gerçek render alanını hesapla
-    const containerAspect = displayWidth / displayHeight;
-    const imageAspect     = naturalWidth  / naturalHeight;
+    // Container'ın boyutu (marker'lar buraya position:absolute olarak ekleniyor)
+    const containerW = container.clientWidth;
+    const containerH = container.clientHeight;
 
-    let renderWidth, renderHeight, offsetX, offsetY;
+    // img elementi container içinde nerede başlıyor?
+    // (CSS'te img: width:100%; height:100%; object-fit:contain)
+    // object-fit:contain, img elementinin içinde fotoğrafı letterbox ile gösterir.
+    // img.offsetLeft/offsetTop → img'nin container'a göre sol-üst köşesi (genellikle 0,0)
+    // Gerçek render alanı ise img.clientWidth / clientHeight ile hesaplanır.
+    const imgOffsetX = img.offsetLeft;   // img elementinin container içi x konumu
+    const imgOffsetY = img.offsetTop;    // img elementinin container içi y konumu
+    const imgW = img.clientWidth;        // img elementinin CSS genişliği
+    const imgH = img.clientHeight;       // img elementinin CSS yüksekliği
+
+    // object-fit:contain içindeki letterbox offset
+    const imageAspect     = naturalWidth / naturalHeight;
+    const containerAspect = imgW / imgH;
+
+    let renderWidth, renderHeight, letterboxX, letterboxY;
 
     if (imageAspect > containerAspect) {
-      // Fotoğraf yatay sığıyor → genişlik container kadar
-      renderWidth  = displayWidth;
-      renderHeight = displayWidth / imageAspect;
-      offsetX = 0;
-      offsetY = (displayHeight - renderHeight) / 2;
+      // Yatay fotoğraf: genişlik img kadar, yükseklik küçülür
+      renderWidth  = imgW;
+      renderHeight = imgW / imageAspect;
+      letterboxX   = 0;
+      letterboxY   = (imgH - renderHeight) / 2;
     } else {
-      // Fotoğraf dikey sığıyor → yükseklik container kadar
-      renderHeight = displayHeight;
-      renderWidth  = displayHeight * imageAspect;
-      offsetX = (displayWidth - renderWidth) / 2;
-      offsetY = 0;
+      // Dikey fotoğraf: yükseklik img kadar, genişlik küçülür
+      renderHeight = imgH;
+      renderWidth  = imgH * imageAspect;
+      letterboxX   = (imgW - renderWidth) / 2;
+      letterboxY   = 0;
     }
+
+    // Toplam offset = img'nin container içi pozisyonu + letterbox
+    const totalOffsetX = imgOffsetX + letterboxX;
+    const totalOffsetY = imgOffsetY + letterboxY;
 
     steps.forEach(step => {
       const marker = document.createElement('div');
       marker.className = 'marker';
 
-      const x = offsetX + (step.coord_x / 100) * renderWidth;
-      const y = offsetY + (step.coord_y / 100) * renderHeight;
+      const x = totalOffsetX + (step.coord_x / 100) * renderWidth;
+      const y = totalOffsetY + (step.coord_y / 100) * renderHeight;
 
       marker.style.cssText = `
         position: absolute;

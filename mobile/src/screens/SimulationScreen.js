@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
+  Text,
   Image,
   ActivityIndicator,
   Alert,
@@ -10,6 +11,20 @@ import { getSteps } from '../api/faultApi';
 import { API_BASE_URL } from '../constants/config';
 import MarkerOverlay from '../components/MarkerOverlay';
 import StepCard from '../components/StepCard';
+
+const COLORS = {
+  bgPrimary: '#0a0a0a',
+  bgSecondary: '#111111',
+  bgCard: '#1a1a1a',
+  border: '#2a2a2a',
+  textPrimary: '#ffffff',
+  textSecondary: '#a0a0a0',
+  accent: '#FF3B30',
+  accentHover: '#ff5247',
+  success: '#30D158',
+  warning: '#FFD60A',
+  error: '#FF3B30',
+};
 
 export default function SimulationScreen({ route }) {
   const { fault } = route.params;
@@ -95,10 +110,13 @@ export default function SimulationScreen({ route }) {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4A90D9" />
+        <ActivityIndicator size="large" color={COLORS.accent} />
       </View>
     );
   }
+
+  /** Yükleme tamamlandı, arıza tespit edilmedi. */
+  const noFaultDetected = !isLoading && steps.length === 0;
 
   return (
     <View style={styles.container}>
@@ -112,7 +130,7 @@ export default function SimulationScreen({ route }) {
           resizeMode="contain"
         />
 
-        {imageLayout.width > 0 && (
+        {!noFaultDetected && imageLayout.width > 0 && (
           <MarkerOverlay
             steps={steps}
             imageLayout={imageLayout}
@@ -123,13 +141,24 @@ export default function SimulationScreen({ route }) {
         )}
       </View>
 
-      {/* Adım Açıklama Kartı */}
-      <StepCard
-        step={activeStep}
-        totalSteps={steps.length}
-        onPrev={handlePrev}
-        onNext={handleNext}
-      />
+      {/* Arıza Yok Bilgi Kartı */}
+      {noFaultDetected ? (
+        <View style={styles.noFaultCard}>
+          <Text style={styles.noFaultIcon}>✓</Text>
+          <Text style={styles.noFaultTitle}>Arıza Tespit Edilmedi</Text>
+          <Text style={styles.noFaultSubtitle}>
+            Bu cihazda görsel analiz sonucunda herhangi bir fiziksel arıza bulunamadı.
+          </Text>
+        </View>
+      ) : (
+        /* Adım Açıklama Kartı */
+        <StepCard
+          step={activeStep}
+          totalSteps={steps.length}
+          onPrev={handlePrev}
+          onNext={handleNext}
+        />
+      )}
     </View>
   );
 }
@@ -137,13 +166,13 @@ export default function SimulationScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0a0a',
+    backgroundColor: COLORS.bgPrimary,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0a0a0a',
+    backgroundColor: COLORS.bgPrimary,
   },
   imageWrapper: {
     flex: 1,
@@ -155,5 +184,31 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+  },
+  noFaultCard: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: '#0d2e1a',
+    borderWidth: 1,
+    borderColor: COLORS.success,
+    alignItems: 'center',
+  },
+  noFaultIcon: {
+    fontSize: 24,
+    color: COLORS.success,
+    marginBottom: 6,
+  },
+  noFaultTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.success,
+    marginBottom: 6,
+  },
+  noFaultSubtitle: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
