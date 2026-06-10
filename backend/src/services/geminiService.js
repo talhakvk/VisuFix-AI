@@ -52,5 +52,29 @@ exports.analyzeImage = async function (photoPath) {
     throw new Error('Gemini response does not contain a valid steps array.');
   }
 
-  return parsed.steps;
+  // ── Koordinat normalize et ──────────────────────────────────────
+  // Gemini bazen prompt'a rağmen 0-1 aralığında değer döndürüyor.
+  // Tüm coord_x ve coord_y değerleri ≤ 1.0 ise bunlar oran olarak
+  // üretilmiş demektir; 100 ile çarparak 0-100 aralığına taşı.
+  const steps = parsed.steps;
+  if (steps.length > 0) {
+    const allNormalized = steps.every(
+      (s) => typeof s.coord_x === 'number' && s.coord_x <= 1.0 &&
+              typeof s.coord_y === 'number' && s.coord_y <= 1.0
+    );
+    if (allNormalized) {
+      steps.forEach((s) => {
+        s.coord_x = Math.round(s.coord_x * 100 * 10) / 10;
+        s.coord_y = Math.round(s.coord_y * 100 * 10) / 10;
+      });
+    }
+  }
+
+  // ── Değerleri 0-100 arasına sıkıştır ───────────────────────────
+  steps.forEach((s) => {
+    s.coord_x = Math.min(100, Math.max(0, s.coord_x));
+    s.coord_y = Math.min(100, Math.max(0, s.coord_y));
+  });
+
+  return steps;
 };

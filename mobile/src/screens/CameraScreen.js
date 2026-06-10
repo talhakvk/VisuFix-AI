@@ -11,6 +11,20 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { uploadFault } from '../api/faultApi';
 
+const COLORS = {
+  bgPrimary: '#0a0a0a',
+  bgSecondary: '#111111',
+  bgCard: '#1a1a1a',
+  border: '#2a2a2a',
+  textPrimary: '#ffffff',
+  textSecondary: '#a0a0a0',
+  accent: '#FF3B30',
+  accentHover: '#ff5247',
+  success: '#30D158',
+  warning: '#FFD60A',
+  error: '#FF3B30',
+};
+
 export default function CameraScreen({ navigation }) {
   const [imageUri, setImageUri] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -144,7 +158,7 @@ export default function CameraScreen({ navigation }) {
           >
             {isLoading ? (
               <View style={styles.loadingRow}>
-                <ActivityIndicator size="small" color="#fff" />
+                <ActivityIndicator size="small" color={COLORS.textPrimary} />
                 <Text style={styles.analyzeButtonText}>Analiz ediliyor...</Text>
               </View>
             ) : (
@@ -160,18 +174,20 @@ export default function CameraScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.bgPrimary,
   },
   previewContainer: {
     flex: 1,
     margin: 16,
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: COLORS.bgCard,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 8,
   },
   previewImage: {
@@ -183,7 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e8e8e8',
+    backgroundColor: COLORS.bgCard,
   },
   placeholderIcon: {
     fontSize: 64,
@@ -191,7 +207,7 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontSize: 16,
-    color: '#888',
+    color: COLORS.textSecondary,
     textAlign: 'center',
     paddingHorizontal: 32,
   },
@@ -214,21 +230,25 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
   },
   cameraButton: {
-    backgroundColor: '#4A90D9',
+    backgroundColor: COLORS.bgCard,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   galleryButton: {
-    backgroundColor: '#5C6BC0',
+    backgroundColor: COLORS.bgCard,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   buttonIcon: {
     fontSize: 24,
     marginBottom: 4,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.textPrimary,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -237,19 +257,19 @@ const styles = StyleSheet.create({
   },
   analyzeButton: {
     marginTop: 12,
-    backgroundColor: '#43A047',
+    backgroundColor: COLORS.accent,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: COLORS.accent,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 6,
   },
   analyzeButtonText: {
-    color: '#fff',
+    color: COLORS.textPrimary,
     fontSize: 18,
     fontWeight: '700',
   },

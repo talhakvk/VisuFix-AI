@@ -157,6 +157,118 @@ html, body {
   color: var(--text-secondary);
 }
 
+/* ── Sidebar Recent Faults ──────────────────────────────────── */
+.sidebar-recent {
+  padding: 0 12px 12px;
+}
+
+.recent-fault-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recent-fault-item {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+
+.recent-fault-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.recent-fault-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.recent-fault-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.recent-fault-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb-placeholder-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.recent-fault-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-fault-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.recent-fault-date {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.badge-sm {
+  font-size: 9px !important;
+  padding: 1px 6px !important;
+}
+
+.recent-fault-empty {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 8px 10px;
+  font-style: italic;
+}
+
+/* Skeleton loading */
+.recent-fault-skeleton {
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255,255,255,0.04) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  margin-bottom: 2px;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ── Main Content ───────────────────────────────────────────── */
 .main-content {
   margin-left: 260px;
@@ -673,6 +785,14 @@ tbody td {
 }
 
 .step-item:last-child { border-bottom: none; }
+
+/* ── Aktif adım highlight ───────────────────────────────────── */
+.active-step {
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 0 14px rgba(255, 59, 48, 0.25);
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease;
+}
 
 .step-num {
   width: 30px;

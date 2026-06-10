@@ -11,6 +11,20 @@ import {
   StyleSheet,
 } from 'react-native';
 
+const COLORS = {
+  bgPrimary: '#0a0a0a',
+  bgSecondary: '#111111',
+  bgCard: '#1a1a1a',
+  border: '#2a2a2a',
+  textPrimary: '#ffffff',
+  textSecondary: '#a0a0a0',
+  accent: '#FF3B30',
+  accentHover: '#ff5247',
+  success: '#30D158',
+  warning: '#FFD60A',
+  error: '#FF3B30',
+};
+
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const COLLAPSED_HEIGHT = 160;
 const EXPANDED_HEIGHT = WINDOW_HEIGHT * 0.7;
@@ -167,7 +181,7 @@ export default function StepCard({ step, totalSteps, onPrev, onNext }) {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 10,
   },
   sheet: {
@@ -175,7 +189,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: COLORS.bgCard,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     zIndex: 20,
@@ -193,7 +207,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#ccc',
+    backgroundColor: COLORS.border,
   },
   emptyContainer: {
     flex: 1,
@@ -206,7 +220,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#9CA3AF',
+    color: COLORS.textSecondary,
     fontWeight: '500',
   },
   contentContainer: {
@@ -220,7 +234,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   badge: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: COLORS.accent,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -228,7 +242,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
   },
   scrollArea: {
     flex: 1,
@@ -239,7 +253,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 15,
     lineHeight: 24,
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
   },
   navigation: {
     flexDirection: 'row',
@@ -251,12 +265,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: '#FF3B30',
+    backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   navButtonNext: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: COLORS.accent,
   },
   navButtonDisabled: {
     opacity: 0.3,
@@ -264,12 +278,12 @@ const styles = StyleSheet.create({
   navButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
   },
   navButtonNextText: {
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
   },
   navButtonTextDisabled: {
-    color: '#FFFFFF',
+    color: COLORS.textPrimary,
   },
 });

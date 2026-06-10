@@ -42,6 +42,7 @@ async function loadDetail() {
     headerTitle.textContent = `Arıza #${fault.id}`;
     document.title          = `VisuFix AI — Arıza #${fault.id}`;
     pageContent.innerHTML   = buildDetailHTML(fault, steps);
+    renderMarkers(fault, steps);
 
   } catch (err) {
     pageContent.innerHTML = buildErrorHTML(err.message);
@@ -77,12 +78,15 @@ function buildDetailHTML(fault, steps) {
         <!-- Sol: Fotoğraf -->
         <div class="photo-card">
           <div class="photo-area">
-            <img
-              id="detailPhoto"
-              src="${API_PHOTO_BASE}/${fault.photo_url}"
-              alt="Arıza #${fault.id} fotoğrafı"
-              onerror="handlePhotoError(this)"
-            />
+            <div id="photo-container" style="position:relative;display:block;width:100%;height:500px;">
+              <img
+                id="detailPhoto"
+                src="${API_PHOTO_BASE}/${fault.photo_url}"
+                alt="Arıza #${fault.id} fotoğrafı"
+                onerror="handlePhotoError(this)"
+                style="display:block;width:100%;height:100%;object-fit:contain;"
+              />
+            </div>
           </div>
           <div class="photo-info">
             <div class="info-item">
@@ -119,19 +123,29 @@ function buildDetailHTML(fault, steps) {
 function buildStepsHTML(steps) {
   if (steps.length === 0) {
     return `
-      <div class="no-steps" role="status">
-        <div class="no-steps-icon" aria-hidden="true">📭</div>
-        <div>Bu arıza için henüz adım oluşturulmamış.</div>
+      <div role="status" style="
+        background-color: #0d2e1a;
+        border: 1px solid #30D158;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      ">
+        <span aria-hidden="true" style="font-size:24px;color:#30D158;flex-shrink:0;">✓</span>
+        <div>
+          <div style="color:#30D158;font-weight:bold;margin-bottom:4px;">Arıza Tespit Edilmedi</div>
+          <div style="color:#a0a0a0;font-size:13px;">Bu cihazda görsel analiz sonucunda herhangi bir fiziksel arıza bulunamadı.</div>
+        </div>
       </div>`;
   }
   return [...steps]
     .sort((a, b) => a.step_order - b.step_order)
     .map(step => `
-      <div class="step-item">
+      <div class="step-item step-card" id="step-${step.id}">
         <div class="step-num" aria-label="Adım ${step.step_order}">${step.step_order}</div>
         <div class="step-body">
           <div class="step-desc">${escapeHTML(step.description)}</div>
-          <div class="step-coord">Konum: X: ${step.coord_x}%, Y: ${step.coord_y}%</div>
         </div>
       </div>`)
     .join('');
@@ -230,10 +244,14 @@ window.handlePhotoError = function (img) {
 /* ── Helpers ────────────────────────────────────────────────── */
 function formatDate(isoString) {
   if (!isoString) return '—';
+  // SQLite CURRENT_TIMESTAMP UTC kaydeder ama 'Z' eklemiyor.
+  // '+00:00' ekleyerek UTC olduğunu browser'a açıkça bildiriyoruz.
+  const normalized = isoString.includes('Z') || isoString.includes('+') ? isoString : isoString + '+00:00';
   return new Intl.DateTimeFormat('tr-TR', {
     day: '2-digit', month: 'short', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
-  }).format(new Date(isoString));
+    timeZone: 'Europe/Istanbul',
+  }).format(new Date(normalized));
 }
 
 function renderBadge(status) {
@@ -283,7 +301,107 @@ function showToast(message, type = 'info') {
   }, 3500);
 }
 
-window.showSettingsToast = () => showToast('Ayarlar sayfası yakında geliyor!', 'info');
+/* ── Marker Renderer ────────────────────────────────────────── */
+function renderMarkers(fault, steps) {
+  if (!steps || steps.length === 0) return;
+
+  const container = document.getElementById('photo-container');
+  if (!container) return;
+  const img = container.querySelector('img');
+  if (!img) return;
+
+  function drawMarkers() {
+    container.querySelectorAll('.marker').forEach(m => m.remove());
+
+    if (!img.naturalWidth || !img.naturalHeight) return;
+
+    // img elementinin container içindeki gerçek pozisyonu ve boyutu
+    const imgRect = img.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    // object-fit: contain letterbox hesabı
+    const imageAspect = img.naturalWidth / img.naturalHeight;
+    const imgElAspect = imgRect.width / imgRect.height;
+
+    let renderWidth, renderHeight, letterboxX, letterboxY;
+
+    if (imageAspect > imgElAspect) {
+      renderWidth = imgRect.width;
+      renderHeight = imgRect.width / imageAspect;
+      letterboxX = 0;
+      letterboxY = (imgRect.height - renderHeight) / 2;
+    } else {
+      renderHeight = imgRect.height;
+      renderWidth = imgRect.height * imageAspect;
+      letterboxX = (imgRect.width - renderWidth) / 2;
+      letterboxY = 0;
+    }
+
+    // container'a relative final koordinatlar
+    const baseX = (imgRect.left - containerRect.left) + letterboxX;
+    const baseY = (imgRect.top - containerRect.top) + letterboxY;
+
+    steps.forEach(step => {
+      const marker = document.createElement('div');
+      marker.className = 'marker';
+
+      const x = baseX + (step.coord_x / 100) * renderWidth;
+      const y = baseY + (step.coord_y / 100) * renderHeight;
+
+      marker.style.cssText = `
+        position: absolute;
+        left: ${x}px;
+        top: ${y}px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: #FF3B30;
+        border: 2px solid #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+        color: #ffffff;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 0 0 3px rgba(255,59,48,0.3);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      `;
+      marker.textContent = step.step_order;
+      marker.title = step.description;
+
+      marker.addEventListener('mouseenter', () => {
+        marker.style.transform = 'translate(-50%, -50%) scale(1.25)';
+        marker.style.boxShadow = '0 0 0 5px rgba(255,59,48,0.4)';
+      });
+      marker.addEventListener('mouseleave', () => {
+        marker.style.transform = 'translate(-50%, -50%) scale(1)';
+        marker.style.boxShadow = '0 0 0 3px rgba(255,59,48,0.3)';
+      });
+
+      marker.addEventListener('click', () => {
+        document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
+        const stepCard = document.getElementById('step-' + step.id);
+        if (stepCard) {
+          stepCard.classList.add('active-step');
+          stepCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+
+      container.appendChild(marker);
+    });
+  }
+
+  if (img.complete && img.naturalWidth > 0) {
+    drawMarkers();
+  } else {
+    img.addEventListener('load', drawMarkers);
+  }
+
+  window.addEventListener('resize', drawMarkers);
+}
 
 /* ── Mobile Sidebar ─────────────────────────────────────────── */
 function bindSidebarEvents() {
