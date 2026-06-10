@@ -15,6 +15,9 @@ build/
 *.sqlite
 *.db
 
+# Uploads (user-uploaded photos)
+backend/uploads/
+
 # Logs
 logs/
 *.log

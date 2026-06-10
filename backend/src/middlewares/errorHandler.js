@@ -7,7 +7,9 @@ function errorHandler(err, req, res, next) {
     return res.status(400).json({ error: err.message });
   }
 
-  return res.status(500).json({ error: err.message });
+  // Dahili hataları logla ama istemciye detay sızdırma
+  console.error('Internal Server Error:', err);
+  return res.status(500).json({ error: 'Bir sunucu hatası oluştu.' });
 }
 
 module.exports = errorHandler;
