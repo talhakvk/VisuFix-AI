@@ -9,73 +9,73 @@
 
 # 🔧 VisuFix AI
 
-**Yapay zeka destekli görsel arıza tespit ve onarım rehberi.**
+**AI-powered visual fault detection and repair guide.**
 
-VisuFix AI, kullanıcıların bozulan elektronik cihazlarının (bilgisayar kasası, modem, yazıcı vb.) fotoğrafını çekerek, yapay zekanın yönlendirmesiyle adım adım onarım yapmasını sağlayan bir uygulamadır. Google Gemini Vision API kullanarak fotoğraf üzerindeki arızaları otomatik olarak tespit eder ve her arıza noktasını koordinat bazlı görsel işaretleyicilerle ekrana yansıtır.
-
----
-
-## 🎯 Problem ve Motivasyon
-
-Kullanıcılar bozulan cihazlarına müdahale ederken, geleneksel statik kullanma kılavuzlarının karmaşıklığı nedeniyle doğru adımları bulamaz ve cihaza yanlış müdahale etme riski taşır. Her cihazın yapısı farklı olduğu için, genel geçer yazılı talimatlar yetersiz kalmaktadır.
-
-**VisuFix AI**, kullanıcının **kendi çektiği fotoğraf** üzerinden kişiselleştirilmiş ve görsel bir onarım rehberi sunarak bu sorunu çözer.
+VisuFix AI is an application that enables users to photograph their malfunctioning electronic devices (computer cases, modems, printers, etc.) and receive step-by-step repair guidance powered by artificial intelligence. Using Google Gemini Vision API, it automatically detects faults in the photograph and displays each fault point on screen with coordinate-based visual markers.
 
 ---
 
-## ✨ Temel Özellikler
+## 🎯 Problem & Motivation
 
-| Özellik | Açıklama |
-|---------|----------|
-| 📸 **Fotoğraf ile Arıza Tespiti** | Kamera veya galeriden yüklenen cihaz fotoğrafını Gemini AI ile analiz eder |
-| 🎯 **Koordinat Bazlı İşaretleme** | Arıza noktalarını fotoğraf üzerinde hassas koordinatlarla gösterir |
-| 🔴 **AR Tarzı Görsel İşaretleyiciler** | Pulse animasyonlu marker'larla arıza noktalarını vurgular |
-| 📋 **Adım Adım Onarım Rehberi** | Her arıza için detaylı açıklama ve çözüm önerisi sunar |
-| 📱 **Mobil Uygulama** | React Native (Expo) ile geliştirilmiş, iOS ve Android uyumlu |
-| 🖥️ **Web Admin Paneli** | Tüm arıza kayıtlarını yönetmek için modern dashboard |
-| 🗄️ **RESTful API** | Express.js tabanlı tam CRUD API |
+When users attempt to repair their broken devices, the complexity of traditional static user manuals makes it difficult to find the correct steps, creating a risk of improper intervention. Since every device has a different structure, generic written instructions are often inadequate.
+
+**VisuFix AI** solves this problem by providing a personalized, visual repair guide based on the **user's own photograph** of their device.
 
 ---
 
-## 📱 Mobil Uygulama Ekran Görüntüleri
+## ✨ Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 📸 **Photo-Based Fault Detection** | Analyzes device photos from camera or gallery using Gemini AI |
+| 🎯 **Coordinate-Based Marking** | Pinpoints fault locations on the photo with precise coordinates |
+| 🔴 **AR-Style Visual Markers** | Highlights fault points with pulse-animated markers |
+| 📋 **Step-by-Step Repair Guide** | Provides detailed descriptions and solutions for each fault |
+| 📱 **Mobile Application** | Cross-platform app built with React Native (Expo) |
+| 🖥️ **Web Admin Panel** | Modern dashboard for managing all fault records |
+| 🗄️ **RESTful API** | Full CRUD API built with Express.js |
+
+---
+
+## 📱 Mobile App Screenshots
 
 <p align="center">
-  <img src="screenshots/mobile-1.png" width="250" alt="Kamera Ekranı" />
+  <img src="screenshots/mobile-1.png" width="250" alt="Camera Screen" />
   &nbsp;&nbsp;
-  <img src="screenshots/mobile-2.png" width="250" alt="Analiz Sonucu" />
+  <img src="screenshots/mobile-2.png" width="250" alt="Analysis Result" />
   &nbsp;&nbsp;
-  <img src="screenshots/mobile-3.png" width="250" alt="Onarım Adımları" />
+  <img src="screenshots/mobile-3.png" width="250" alt="Repair Steps" />
 </p>
 
 <!-- 
-  Yukarıdaki görselleri eklemek için:
-  1. Proje kök dizininde "screenshots" klasörü oluşturun
-  2. Mobil uygulamanın ekran görüntülerini bu klasöre kaydedin
-  3. Dosya isimlerini yukarıdaki isimlere göre düzenleyin
+  To add screenshots:
+  1. Create a "screenshots" folder in the project root
+  2. Save your mobile app screenshots to this folder
+  3. Name them to match the filenames above
 -->
 
 ---
 
-## 🖥️ Web Admin Paneli Ekran Görüntüleri
+## 🖥️ Web Admin Panel Screenshots
 
 <p align="center">
   <img src="screenshots/web-dashboard.png" width="800" alt="Dashboard" />
 </p>
 
 <p align="center">
-  <img src="screenshots/web-detail.png" width="800" alt="Arıza Detay Sayfası" />
+  <img src="screenshots/web-detail.png" width="800" alt="Fault Detail Page" />
 </p>
 
 <!-- 
-  Yukarıdaki görselleri eklemek için:
-  1. Proje kök dizininde "screenshots" klasörü oluşturun
-  2. Web panelinin ekran görüntülerini bu klasöre kaydedin
-  3. Dosya isimlerini yukarıdaki isimlere göre düzenleyin
+  To add screenshots:
+  1. Create a "screenshots" folder in the project root
+  2. Save your web panel screenshots to this folder
+  3. Name them to match the filenames above
 -->
 
 ---
 
-## 🏗️ Mimari
+## 🏗️ Architecture
 
 ```
 ┌─────────────────┐         ┌──────────────────┐         ┌────────────┐
@@ -97,80 +97,80 @@ Kullanıcılar bozulan cihazlarına müdahale ederken, geleneksel statik kullanm
 
 ---
 
-## 🛠️ Teknoloji Yığını
+## 🛠️ Tech Stack
 
 ### Backend
-| Teknoloji | Kullanım Amacı |
-|-----------|---------------|
-| **Node.js** | Sunucu tarafı çalışma ortamı |
+| Technology | Purpose |
+|------------|---------|
+| **Node.js** | Server-side runtime environment |
 | **Express.js** | RESTful API framework |
-| **SQLite** (better-sqlite3) | Hafif ilişkisel veritabanı |
-| **Multer** | Dosya yükleme middleware |
-| **Google Generative AI** | Gemini Vision API entegrasyonu |
+| **SQLite** (better-sqlite3) | Lightweight relational database |
+| **Multer** | File upload middleware |
+| **Google Generative AI** | Gemini Vision API integration |
 
-### Mobil
-| Teknoloji | Kullanım Amacı |
-|-----------|---------------|
-| **React Native** | Cross-platform mobil uygulama |
-| **Expo** (SDK 54) | Geliştirme ve derleme araçları |
-| **React Navigation** | Ekranlar arası navigasyon |
-| **Expo Image Picker** | Kamera ve galeri erişimi |
-| **Axios** | HTTP istemcisi |
+### Mobile
+| Technology | Purpose |
+|------------|---------|
+| **React Native** | Cross-platform mobile application |
+| **Expo** (SDK 54) | Development and build toolchain |
+| **React Navigation** | Screen-to-screen navigation |
+| **Expo Image Picker** | Camera and gallery access |
+| **Axios** | HTTP client |
 
 ### Web
-| Teknoloji | Kullanım Amacı |
-|-----------|---------------|
-| **HTML5 / CSS3** | Sayfa yapısı ve stillendirme |
-| **Vanilla JavaScript** | İstemci tarafı mantık |
-| **Tailwind CSS** (CDN) | Yardımcı CSS sınıfları |
+| Technology | Purpose |
+|------------|---------|
+| **HTML5 / CSS3** | Page structure and styling |
+| **Vanilla JavaScript** | Client-side logic |
+| **Tailwind CSS** (CDN) | Utility CSS classes |
 
 ---
 
-## 📂 Proje Yapısı
+## 📂 Project Structure
 
 ```
 VisuFix-AI/
 │
-├── backend/                    # Node.js API Sunucusu
+├── backend/                    # Node.js API Server
 │   ├── src/
-│   │   ├── config/             # Veritabanı yapılandırması
-│   │   ├── controllers/        # İstek işleyicileri
-│   │   ├── middlewares/        # Hata yönetimi, dosya yükleme
-│   │   ├── models/             # SQLite sorguları (Repository)
-│   │   ├── routes/             # API rotaları
-│   │   ├── services/           # Gemini AI servisi
-│   │   ├── utils/              # Prompt oluşturucu
-│   │   └── app.js              # Express uygulama
-│   ├── uploads/                # Yüklenen arıza fotoğrafları
-│   ├── .env.example            # Ortam değişkenleri şablonu
+│   │   ├── config/             # Database configuration
+│   │   ├── controllers/        # Request handlers
+│   │   ├── middlewares/        # Error handling, file upload
+│   │   ├── models/             # SQLite queries (Repository pattern)
+│   │   ├── routes/             # API routes
+│   │   ├── services/           # Gemini AI service
+│   │   ├── utils/              # Prompt builder
+│   │   └── app.js              # Express application
+│   ├── uploads/                # Uploaded fault photos
+│   ├── .env.example            # Environment variables template
 │   ├── package.json
-│   └── server.js               # Sunucu giriş noktası
+│   └── server.js               # Server entry point
 │
-├── mobile/                     # React Native Mobil Uygulama
+├── mobile/                     # React Native Mobile App
 │   ├── src/
-│   │   ├── api/                # Backend API istekleri
+│   │   ├── api/                # Backend API requests
 │   │   ├── components/         # MarkerOverlay, StepCard
-│   │   ├── constants/          # Yapılandırma sabitleri
+│   │   ├── constants/          # Configuration constants
 │   │   ├── screens/            # CameraScreen, SimulationScreen
-│   │   └── theme/              # Tema dosyaları
-│   ├── App.js                  # Uygulama giriş noktası
-│   ├── .env.example            # Ortam değişkenleri şablonu
+│   │   └── theme/              # Theme files
+│   ├── App.js                  # Application entry point
+│   ├── .env.example            # Environment variables template
 │   └── package.json
 │
-├── web/                        # Web Admin Paneli
-│   ├── css/style.css           # Özel stiller
+├── web/                        # Web Admin Panel
+│   ├── css/style.css           # Custom styles
 │   ├── js/
-│   │   ├── api.js              # API katmanı
-│   │   ├── dashboard.js        # Dashboard mantığı
-│   │   └── detail.js           # Arıza detay sayfası
-│   ├── index.html              # Dashboard sayfası
-│   └── detail.html             # Arıza detay sayfası
+│   │   ├── api.js              # API layer
+│   │   ├── dashboard.js        # Dashboard logic
+│   │   └── detail.js           # Fault detail page
+│   ├── index.html              # Dashboard page
+│   └── detail.html             # Fault detail page
 │
-├── database/                   # Veritabanı dokümanları
-│   ├── schema.sql              # Tablo şemaları
-│   └── er-diagram.png          # ER diyagramı
+├── database/                   # Database documentation
+│   ├── schema.sql              # Table schemas
+│   └── er-diagram.png          # ER diagram
 │
-├── docs/                       # Proje dokümanları
+├── docs/                       # Project documentation
 │   ├── problem-definition-scope.md
 │   ├── use-cases.md
 │   ├── mobile-wireframes/
@@ -182,117 +182,117 @@ VisuFix-AI/
 
 ---
 
-## 🚀 Kurulum
+## 🚀 Getting Started
 
-### Gereksinimler
+### Prerequisites
 
-- **Node.js** v18 veya üstü
-- **npm** v9 veya üstü
+- **Node.js** v18 or higher
+- **npm** v9 or higher
 - **Expo CLI** (`npm install -g expo-cli`)
-- **Google Gemini API Anahtarı** → [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **Google Gemini API Key** → [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-### 1. Repoyu Klonlayın
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/talhakvk/VisuFix-AI.git
 cd VisuFix-AI
 ```
 
-### 2. Backend Kurulumu
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-`.env` dosyasını oluşturun:
+Create the `.env` file:
 
 ```bash
 cp .env.example .env
 ```
 
-`.env` dosyasını düzenleyerek Gemini API anahtarınızı girin:
+Edit `.env` and add your Gemini API key:
 
 ```env
 PORT=3000
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-Backend'i başlatın:
+Start the backend:
 
 ```bash
 npm start
 ```
 
-> Sunucu `http://localhost:3000` adresinde çalışacaktır.
+> The server will run at `http://localhost:3000`
 
-### 3. Mobil Uygulama Kurulumu
+### 3. Mobile App Setup
 
 ```bash
 cd mobile
 npm install
 ```
 
-`.env` dosyasını oluşturun:
+Create the `.env` file:
 
 ```bash
 cp .env.example .env
 ```
 
-`.env` dosyasını düzenleyerek bilgisayarınızın yerel IP adresini girin:
+Edit `.env` and enter your computer's local IP address:
 
 ```env
 EXPO_PUBLIC_API_BASE_URL=http://YOUR_LOCAL_IP:3000
 ```
 
-> ⚠️ `localhost` mobil cihazlarda çalışmaz. `ipconfig` (Windows) veya `ifconfig` (Mac/Linux) komutuyla yerel IP adresinizi bulun.
+> ⚠️ `localhost` does not work on mobile devices. Use `ipconfig` (Windows) or `ifconfig` (Mac/Linux) to find your local IP address.
 
-Uygulamayı başlatın:
+Start the app:
 
 ```bash
 npx expo start
 ```
 
-### 4. Web Admin Paneli
+### 4. Web Admin Panel
 
-Web paneli statik dosyalardan oluşmaktadır. Herhangi bir HTTP sunucusuyla çalıştırabilirsiniz:
+The web panel consists of static files. You can run it with any HTTP server:
 
 ```bash
 cd web
-# VS Code kullanıyorsanız Live Server eklentisi ile açabilirsiniz
-# veya:
+# If using VS Code, open with the Live Server extension
+# or:
 npx serve .
 ```
 
-> Backend sunucusunun `http://localhost:3000` adresinde çalıştığından emin olun.
+> Make sure the backend server is running at `http://localhost:3000`
 
 ---
 
-## 📡 API Dokümantasyonu
+## 📡 API Documentation
 
-### Arıza Yönetimi
+### Fault Management
 
-| Metod | Endpoint | Açıklama |
-|-------|----------|----------|
-| `POST` | `/api/faults` | Fotoğraf yükle ve AI analizi başlat |
-| `GET` | `/api/faults` | Tüm arıza kayıtlarını listele |
-| `GET` | `/api/faults/:id` | Arıza detayını getir |
-| `DELETE` | `/api/faults/:id` | Arıza kaydını sil |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/faults` | Upload a photo and start AI analysis |
+| `GET` | `/api/faults` | List all fault records |
+| `GET` | `/api/faults/:id` | Get fault details |
+| `DELETE` | `/api/faults/:id` | Delete a fault record |
 
-### Onarım Adımları
+### Repair Steps
 
-| Metod | Endpoint | Açıklama |
-|-------|----------|----------|
-| `GET` | `/api/faults/:id/steps` | Arızaya ait onarım adımlarını listele |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/faults/:id/steps` | List repair steps for a fault |
 
-### Örnek İstek — Fotoğraf Yükleme
+### Example Request — Upload Photo
 
 ```bash
 curl -X POST http://localhost:3000/api/faults \
-  -F "photo=@./cihaz-fotografi.jpg"
+  -F "photo=@./device-photo.jpg"
 ```
 
-### Örnek Yanıt
+### Example Response
 
 ```json
 {
@@ -309,7 +309,7 @@ curl -X POST http://localhost:3000/api/faults \
       "step_order": 1,
       "coord_x": 45.2,
       "coord_y": 30.8,
-      "description": "Sağ üst köşedeki vida kırılmış. Phillips tornavida ile çıkarılıp yenisiyle değiştirilmeli."
+      "description": "The screw in the upper right corner is broken. Remove it with a Phillips screwdriver and replace with a new one."
     }
   ]
 }
@@ -317,7 +317,7 @@ curl -X POST http://localhost:3000/api/faults \
 
 ---
 
-## 🗄️ Veritabanı Şeması
+## 🗄️ Database Schema
 
 ```sql
 CREATE TABLE faults (
@@ -340,6 +340,6 @@ CREATE TABLE steps (
 
 ---
 
-## 📄 Lisans
+## 📄 License
 
-Bu proje [ISC](https://opensource.org/licenses/ISC) lisansı altında sunulmaktadır.
+This project is licensed under the [ISC](https://opensource.org/licenses/ISC) License.
