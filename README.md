@@ -40,11 +40,9 @@ When users attempt to repair their broken devices, the complexity of traditional
 ## 📱 Mobile App Screenshots
 
 <p align="center">
-  <img src="screenshots/mobile-1.png" width="250" alt="Camera Screen" />
+  <img src="screenshots/mobile-1.jpeg" width="250" alt="Camera Screen" />
   &nbsp;&nbsp;
-  <img src="screenshots/mobile-2.png" width="250" alt="Analysis Result" />
-  &nbsp;&nbsp;
-  <img src="screenshots/mobile-3.png" width="250" alt="Repair Steps" />
+  <img src="screenshots/mobile-2.jpeg" width="250" alt="Analysis Result" />
 </p>
 
 <!-- 
